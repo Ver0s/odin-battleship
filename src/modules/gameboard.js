@@ -2,8 +2,11 @@ const Gameboard = (rowSize, colSize) => {
 	const board = Array.from(Array(rowSize), () =>
 		new Array(colSize).fill(false)
 	);
+	const ships = [];
 
 	const getBoard = () => board;
+
+	const allShipsSunk = () => ships.every((ship) => ship.isSunk());
 
 	const isPosInBoard = (rowPos, colPos) =>
 		rowPos >= 0 && rowPos < rowSize && colPos >= 0 && colPos < colSize;
@@ -17,15 +20,12 @@ const Gameboard = (rowSize, colSize) => {
 		if (!isPosInBoard(rowPos, colPos) || isPosHit(rowPos, colPos))
 			return false;
 
-		if (typeof board[rowPos][colPos] === 'object') {
+		if (isPosShip(rowPos, colPos)) {
 			board[rowPos][colPos].hit();
-
-			if (board[rowPos][colPos].isSunk()) {
-				console.log('ship sunk');
-				// notify subscribers that all ships have been sunk
-			}
 		}
+
 		board[rowPos][colPos] = true;
+		return true;
 	};
 
 	const generateShipPositions = (rowPos, colPos, shipLength, isVertical) => {
@@ -77,12 +77,16 @@ const Gameboard = (rowSize, colSize) => {
 				board[rowPos][colPos + i] = ship;
 			}
 		}
+
+		ships.push(ship);
+		return true;
 	};
 
 	return {
 		getBoard,
 		placeShip,
 		receiveAttack,
+		allShipsSunk,
 	};
 };
 
