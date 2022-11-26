@@ -26,6 +26,13 @@ const gameController = () => {
 		const [rowPos, colPos] = coords;
 
 		if (target.matches('.cell')) {
+			humanPlayer.attackPos(rowPos, colPos, computerPlayer.getBoard());
+
+			if (computerPlayer.getBoard().isPosShip(rowPos, colPos)) {
+				interfaceManager.highlightHit(target);
+			} else {
+				interfaceManager.highlightMiss(target);
+			}
 		}
 	});
 };
