@@ -1,134 +1,6 @@
 import Gameboard from './gameboard';
 import Ship from './ship';
 
-describe('board generation', () => {
-	test('generates 10x10 board', () => {
-		const desiredBoard = [
-			[
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-			],
-			[
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-			],
-			[
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-			],
-			[
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-			],
-			[
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-			],
-			[
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-			],
-			[
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-			],
-			[
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-			],
-			[
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-			],
-			[
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-				false,
-			],
-		];
-		expect(Gameboard(10, 10).getBoard()).toEqual(desiredBoard);
-	});
-});
-
 describe('ship placement', () => {
 	test('correctly places a single ship horizontally on a board', () => {
 		const testGameboard = Gameboard(10, 10);
@@ -138,7 +10,10 @@ describe('ship placement', () => {
 		testGameboard.placeShip(testShip, 2, 1, false);
 
 		expect(
-			board[2][1] && board[2][2] && board[2][3] && board[2][4]
+			board[2][1].ship &&
+				board[2][2].ship &&
+				board[2][3].ship &&
+				board[2][4].ship
 		).toEqual(testShip);
 	});
 
@@ -150,7 +25,10 @@ describe('ship placement', () => {
 		testGameboard.placeShip(testShip, 2, 1, true);
 
 		expect(
-			board[2][1] && board[3][1] && board[4][1] && board[5][1]
+			board[2][1].ship &&
+				board[3][1].ship &&
+				board[4][1].ship &&
+				board[5][1].ship
 		).toEqual(testShip);
 	});
 
@@ -166,16 +44,21 @@ describe('ship placement', () => {
 		testGameboard.placeShip(testShip3, 1, 9, true);
 
 		expect(
-			board[2][1] &&
-				board[3][1] &&
-				board[4][1] &&
-				board[5][1] &&
-				board[6][1]
+			board[2][1].ship &&
+				board[3][1].ship &&
+				board[4][1].ship &&
+				board[5][1].ship &&
+				board[6][1].ship
 		).toEqual(testShip1);
 		expect(
-			board[9][0] && board[9][1] && board[9][2] && board[9][3]
+			board[9][0].ship &&
+				board[9][1].ship &&
+				board[9][2].ship &&
+				board[9][3].ship
 		).toEqual(testShip2);
-		expect(board[1][9] && board[2][9] && board[3][9]).toEqual(testShip3);
+		expect(
+			board[1][9].ship && board[2][9].ship && board[3][9].ship
+		).toEqual(testShip3);
 	});
 
 	test('ships cant overlap each other', () => {
@@ -189,9 +72,14 @@ describe('ship placement', () => {
 
 		expect(testGameboard.placeShip(testShip2, 2, 1, false)).toBe(false);
 		expect(
-			board[2][1] && board[2][2] && board[2][3] && board[2][4]
+			board[2][1].ship &&
+				board[2][2].ship &&
+				board[2][3].ship &&
+				board[2][4].ship
 		).toEqual(testShip1);
-		expect(board[1][1] && board[3][1]).toBe(false);
+		expect(board[1][1].ship && board[2][1] && board[3][1]).not.toEqual(
+			testShip2
+		);
 	});
 
 	test('ships cant overflow the board', () => {
@@ -217,8 +105,8 @@ describe('attacks', () => {
 		testGameboard.receiveAttack(2, 1);
 		testGameboard.receiveAttack(4, 1);
 
-		expect(board[2][1]).toBe(true);
-		expect(board[4][1]).toBe(true);
+		expect(board[2][1].isHit).toBe(true);
+		expect(board[4][1].isHit).toBe(true);
 	});
 
 	test('doesnt allow attacking already hit position', () => {
@@ -229,9 +117,7 @@ describe('attacks', () => {
 		testGameboard.placeShip(testShip, 2, 1, false);
 
 		testGameboard.receiveAttack(2, 1);
-
-		expect(board[2][1]).toBe(true);
-		expect(testGameboard.receiveAttack(2, 1)).toBe(false);
+		expect(board[2][1].isHit).toBe(true);
 	});
 
 	test('hitting all ship positions sinks it', () => {
@@ -246,9 +132,12 @@ describe('attacks', () => {
 		testGameboard.receiveAttack(2, 3);
 		testGameboard.receiveAttack(2, 4);
 
-		expect(board[2][1] && board[2][2] && board[2][3] && board[2][4]).toBe(
-			true
-		);
+		expect(
+			board[2][1].isHit &&
+				board[2][2].isHit &&
+				board[2][3].isHit &&
+				board[2][4].isHit
+		).toBe(true);
 
 		expect(testShip.isSunk()).toBe(true);
 	});
@@ -270,11 +159,14 @@ describe('attacks', () => {
 		testGameboard.receiveAttack(7, 0);
 		testGameboard.receiveAttack(8, 0);
 
-		expect(board[2][1] && board[2][2] && board[2][3] && board[2][4]).toBe(
-			true
-		);
+		expect(
+			board[2][1].isHit &&
+				board[2][2].isHit &&
+				board[2][3].isHit &&
+				board[2][4].isHit
+		).toBe(true);
 
-		expect(board[7][0] && board[8][0]).toBe(true);
+		expect(board[7][0].isHit && board[8][0].isHit).toBe(true);
 		expect(testGameboard.allShipsSunk()).toBe(true);
 	});
 
@@ -287,8 +179,11 @@ describe('attacks', () => {
 		testGameboard.receiveAttack(8, 8);
 		testGameboard.receiveAttack(2, 8);
 
-		expect(board[3][1] && board[2][1] && board[8][8] && board[2][8]).toBe(
-			true
-		);
+		expect(
+			board[3][1].isHit &&
+				board[2][1].isHit &&
+				board[8][8].isHit &&
+				board[2][8].isHit
+		).toBe(true);
 	});
 });
