@@ -20,20 +20,19 @@ const Gameboard = (rowSize, colSize) => {
 	const isPosInBoard = (rowPos, colPos) =>
 		rowPos >= 0 && rowPos < rowSize && colPos >= 0 && colPos < colSize;
 
-	const isPosHit = (rowPos, colPos) => board[rowPos][colPos] === true;
+	const isPosHit = (rowPos, colPos) => board[rowPos][colPos].isHit === true;
 
-	const isPosShip = (rowPos, colPos) =>
-		typeof board[rowPos][colPos] === 'object';
+	const isPosShip = (rowPos, colPos) => board[rowPos][colPos].ship;
 
 	const receiveAttack = (rowPos, colPos) => {
 		if (!isPosInBoard(rowPos, colPos) || isPosHit(rowPos, colPos))
 			return false;
 
 		if (isPosShip(rowPos, colPos)) {
-			board[rowPos][colPos].hit();
+			board[rowPos][colPos].ship.hit();
 		}
 
-		board[rowPos][colPos] = true;
+		board[rowPos][colPos].isHit = true;
 		return true;
 	};
 
@@ -79,11 +78,11 @@ const Gameboard = (rowSize, colSize) => {
 
 		if (isVertical) {
 			for (let i = 0; i < ship.getLength(); i++) {
-				board[rowPos + i][colPos] = ship;
+				board[rowPos + i][colPos].ship = ship;
 			}
 		} else {
 			for (let i = 0; i < ship.getLength(); i++) {
-				board[rowPos][colPos + i] = ship;
+				board[rowPos][colPos + i].ship = ship;
 			}
 		}
 
@@ -96,6 +95,7 @@ const Gameboard = (rowSize, colSize) => {
 		placeShip,
 		receiveAttack,
 		allShipsSunk,
+		isPosShip,
 	};
 };
 
