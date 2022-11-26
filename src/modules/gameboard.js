@@ -11,6 +11,7 @@ const Gameboard = (rowSize, colSize) => {
 	};
 
 	const board = initBoard(10, 10);
+
 	const ships = [];
 
 	const getBoard = () => board;
@@ -25,15 +26,13 @@ const Gameboard = (rowSize, colSize) => {
 	const isPosShip = (rowPos, colPos) => board[rowPos][colPos].ship;
 
 	const receiveAttack = (rowPos, colPos) => {
-		if (!isPosInBoard(rowPos, colPos) || isPosHit(rowPos, colPos))
-			return false;
+		if (!isPosInBoard(rowPos, colPos) || isPosHit(rowPos, colPos)) return;
 
 		if (isPosShip(rowPos, colPos)) {
 			board[rowPos][colPos].ship.hit();
 		}
 
 		board[rowPos][colPos].isHit = true;
-		return true;
 	};
 
 	const generateShipPositions = (rowPos, colPos, shipLength, isVertical) => {
