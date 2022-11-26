@@ -1,7 +1,16 @@
 const Gameboard = (rowSize, colSize) => {
-	const board = Array.from(Array(rowSize), () =>
-		new Array(colSize).fill(false)
-	);
+	const initBoard = (rows, cols) => {
+		const board = [];
+		for (let i = 0; i < rows; i++) {
+			board[i] = [];
+			for (let j = 0; j < cols; j++) {
+				board[i][j] = { ship: null, isHit: false };
+			}
+		}
+		return board;
+	};
+
+	const board = initBoard(10, 10);
 	const ships = [];
 
 	const getBoard = () => board;
