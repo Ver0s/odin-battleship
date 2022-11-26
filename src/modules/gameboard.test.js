@@ -253,6 +253,31 @@ describe('attacks', () => {
 		expect(testShip.isSunk()).toBe(true);
 	});
 
+	test('sinking all ships returns a proper boolean value indicator', () => {
+		const testGameboard = Gameboard(10, 10);
+		const board = testGameboard.getBoard();
+		const testShip1 = Ship(4);
+		const testShip2 = Ship(2);
+
+		testGameboard.placeShip(testShip1, 2, 1, false);
+		testGameboard.placeShip(testShip2, 7, 0, true);
+
+		testGameboard.receiveAttack(2, 1);
+		testGameboard.receiveAttack(2, 2);
+		testGameboard.receiveAttack(2, 3);
+		testGameboard.receiveAttack(2, 4);
+
+		testGameboard.receiveAttack(7, 0);
+		testGameboard.receiveAttack(8, 0);
+
+		expect(board[2][1] && board[2][2] && board[2][3] && board[2][4]).toBe(
+			true
+		);
+
+		expect(board[7][0] && board[8][0]).toBe(true);
+		expect(testGameboard.allShipsSunk()).toBe(true);
+	});
+
 	test('board accepts attacks on positions that are not ships', () => {
 		const testGameboard = Gameboard(10, 10);
 		const board = testGameboard.getBoard();
