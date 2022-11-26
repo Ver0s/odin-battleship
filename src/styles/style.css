@@ -1,0 +1,29 @@
+.boards-container {
+	display: flex;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+	gap: 4rem;
+}
+
+.player-board,
+.computer-board {
+	display: grid;
+	grid-template-columns: repeat(10, 40px);
+	grid-template-rows: repeat(10, 40px);
+	gap: 1px;
+}
+
+.cell {
+	outline: 1px solid black;
+}
+
+.cell.hit {
+	background-color: rgb(255, 61, 61);
+	cursor: not-allowed;
+}
+
+.cell.miss {
+	background-color: rgb(105, 42, 42);
+	cursor: not-allowed;
+}
