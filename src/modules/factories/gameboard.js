@@ -96,6 +96,7 @@ const Gameboard = (rowSize, colSize) => {
 		allShipsSunk,
 		isPosShip,
 		isPosHit,
+		isLegalPlacement,
 	};
 };
 
