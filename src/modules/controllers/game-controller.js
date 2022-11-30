@@ -50,16 +50,14 @@ const gameController = () => {
 	};
 	placeShipsRandomly();
 
-	// loop through fleet
-	// foreach fleet item return its length
-	// show place on grid on hover with proper length
-	// onclick place ship in board
-	// show ships
 	const placeShips = (rowPos, colPos, isVertical) => {
 		if (!playerShips.length) return;
-		player
-			.getBoard()
-			.placeShip(playerShips.shift(), rowPos, colPos, isVertical);
+		// REFACTOR THIS TO OPERATE ON THE END OF ARRAY AND NOT THE BEGGINING
+		const newShip = playerShips.shift();
+
+		if (!player.getBoard().placeShip(newShip, rowPos, colPos, isVertical)) {
+			playerShips.unshift(newShip);
+		}
 	};
 
 	const getPlayer = () => player;
@@ -68,12 +66,15 @@ const gameController = () => {
 
 	const getCurrentShip = () => playerShips[0];
 
+	const arePlayerShipsEmpty = () => playerShips.length === 0;
+
 	return {
 		playRound,
 		getPlayer,
 		getComputer,
 		placeShips,
 		getCurrentShip,
+		arePlayerShipsEmpty,
 	};
 };
 
