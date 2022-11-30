@@ -1,5 +1,5 @@
 import './styles/style.css';
 import './styles/reset.css';
-import gameController from './modules/game-controller';
+import UIController from './modules/controllers/ui-controller';
 
-gameController();
+UIController();
