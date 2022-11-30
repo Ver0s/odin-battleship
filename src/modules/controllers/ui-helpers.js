@@ -43,9 +43,33 @@ export const highlightShipHover = (board, cell, shipLength, isVertical) => {
 	}
 };
 
+export const highlightShipHoverError = (
+	board,
+	cell,
+	shipLength,
+	isVertical
+) => {
+	const [rowPos, colPos] = getCellCoords(cell);
+
+	if (isVertical) {
+		for (let i = 0; i < shipLength; i++) {
+			getCellElement(board, rowPos + i, colPos)?.classList.add(
+				'ship-hover-error'
+			);
+		}
+	} else {
+		for (let i = 0; i < shipLength; i++) {
+			getCellElement(board, rowPos, colPos + i)?.classList.add(
+				'ship-hover-error'
+			);
+		}
+	}
+};
+
 export const clearShipHover = (board) => {
 	[...board.children].forEach((cell) => {
 		cell.classList.remove('ship-hover');
+		cell.classList.remove('ship-hover-error');
 	});
 };
 
@@ -86,4 +110,8 @@ export const updateBoards = (player, computer) => {
 			cell.classList.add('miss');
 		}
 	});
+};
+
+export const hideElement = (el) => {
+	el.style.display = 'none';
 };
