@@ -17,14 +17,13 @@ const Player = (name) => {
 			Math.floor(Math.random() * 10),
 		];
 
-		while (true) {
-			const randomCoords = getRandomCoords();
+		let randomCoords = getRandomCoords();
 
-			if (!enemyBoard.isPosHit(randomCoords[0], randomCoords[1])) {
-				enemyBoard.receiveAttack(randomCoords[0], randomCoords[1]);
-				break;
-			}
+		while (enemyBoard.isPosHit(randomCoords[0], randomCoords[1])) {
+			randomCoords = getRandomCoords();
 		}
+
+		enemyBoard.receiveAttack(randomCoords[0], randomCoords[1]);
 	};
 
 	return {
