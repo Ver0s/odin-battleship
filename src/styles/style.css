@@ -1,3 +1,12 @@
+body {
+	background-color: #334155;
+	color: #f3f4f6;
+}
+
+button {
+	cursor: pointer;
+}
+
 .boards-container {
 	display: flex;
 	height: 100%;
@@ -13,25 +22,43 @@
 	grid-template-columns: repeat(10, auto);
 	grid-template-rows: repeat(10, auto);
 	gap: 1px;
+	position: relative;
+}
+
+.player-board::before,
+.computer-board::before {
+	font-size: 1.5rem;
+	position: absolute;
+	top: -3.5rem;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.player-board::before {
+	content: 'Your board';
+}
+
+.computer-board::before {
+	content: 'Enemy board';
 }
 
 .cell {
-	outline: 1px solid black;
+	outline: 1px solid #a1a1aa;
 	position: relative;
 	width: 40px;
 	height: 40px;
 }
 
 .ship-hover {
-	background-color: rgb(171, 134, 255);
+	background-color: #1f2937;
 }
 
-.ship-hover-error {
-	background-color: rgb(233, 68, 68);
+.cell.ship-hover-error {
+	background-color: #fb7185;
 }
 
 .ship {
-	background-color: rgb(119, 61, 255);
+	background-color: #111827;
 }
 
 .cell.ship::before {
@@ -45,7 +72,7 @@
 }
 
 .cell.hit {
-	background-color: rgb(255, 61, 61);
+	background-color: #b91c1c;
 	cursor: not-allowed;
 }
 
@@ -60,6 +87,18 @@
 }
 
 .cell.miss {
-	background-color: rgb(144, 137, 137);
+	background-color: #6b7280;
 	cursor: not-allowed;
+}
+
+#end-game-modal {
+	display: flex;
+	flex-direction: column;
+	padding: 1.5rem;
+	border: 2px solid black;
+	gap: 0.5rem;
+}
+
+#end-game-modal::backdrop {
+	background: rgba(0, 0, 0, 0.6);
 }
