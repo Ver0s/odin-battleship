@@ -1,22 +1,17 @@
 const Gameboard = (rowSize, colSize) => {
-	const initBoard = (rows, cols) => {
-		const board = [];
-		for (let i = 0; i < rows; i++) {
-			board[i] = [];
-			for (let j = 0; j < cols; j++) {
-				board[i][j] = { ship: null, isHit: false };
-			}
-		}
-		return board;
-	};
+	const initBoard = (rows, cols) =>
+		[...Array(rows)].map(() =>
+			[...Array(cols)].map(() => ({ ship: null, isHit: false }))
+		);
 
-	const board = initBoard(10, 10);
+	let board = initBoard(10, 10);
 
-	const ships = [];
+	let ships = [];
 
 	const getBoard = () => board;
 
-	const allShipsSunk = () => ships.every((ship) => ship.isSunk());
+	const allShipsSunk = () =>
+		ships.length === 0 ? false : ships.every((ship) => ship.isSunk());
 
 	const isPosInBoard = (rowPos, colPos) =>
 		rowPos >= 0 && rowPos < rowSize && colPos >= 0 && colPos < colSize;
@@ -59,14 +54,12 @@ const Gameboard = (rowSize, colSize) => {
 			isVertical
 		);
 
-		const allPositionsInBoard = shipPositions.every((pos) =>
-			isPosInBoard(pos[0], pos[1])
+		const allPositionsInBoard = shipPositions.every(([x, y]) =>
+			isPosInBoard(x, y)
 		);
 		if (!allPositionsInBoard) return false;
 
-		const shipOverlap = shipPositions.some((pos) =>
-			isPosShip(pos[0], pos[1])
-		);
+		const shipOverlap = shipPositions.some(([x, y]) => isPosShip(x, y));
 
 		return allPositionsInBoard && !shipOverlap;
 	};
@@ -89,6 +82,11 @@ const Gameboard = (rowSize, colSize) => {
 		return true;
 	};
 
+	const resetBoard = () => {
+		board = initBoard(10, 10);
+		ships = [];
+	};
+
 	return {
 		getBoard,
 		placeShip,
@@ -97,6 +95,7 @@ const Gameboard = (rowSize, colSize) => {
 		isPosShip,
 		isPosHit,
 		isLegalPlacement,
+		resetBoard,
 	};
 };
 
