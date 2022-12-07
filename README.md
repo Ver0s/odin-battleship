@@ -1,6 +1,6 @@
-#Battleship game
+# Battleship game
 
-###[Click for live preview](https://ver0s.github.io/odin-battleship/ 'Click for live preview')
+### [Click for live preview](https://ver0s.github.io/odin-battleship/ 'Click for live preview')
 
 This was the first project where I used (or at least tried) test driven development. It was certainly something new. The benefits of testing became much more clearer when I was doing an actual project after reading theory about it.
 
