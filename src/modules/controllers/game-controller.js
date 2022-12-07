@@ -1,6 +1,5 @@
 import Ship from '../factories/ship';
 import Player from '../factories/player';
-import * as uiHelpers from './ui-helpers';
 
 const FLEET = {
 	Carrier: 5,
@@ -11,12 +10,17 @@ const FLEET = {
 };
 
 const gameController = () => {
-	const player = Player('Player');
+	const player = Player('You');
 	const computer = Player('Computer');
-	const playerShips = [Ship(5), Ship(4), Ship(3), Ship(3), Ship(2)];
+	let playerShips = Object.values(FLEET).map((length) => Ship(length));
 
 	const checkForWin = () =>
 		player.getBoard().allShipsSunk() || computer.getBoard().allShipsSunk();
+
+	const getWinnerName = () =>
+		player.getBoard().allShipsSunk()
+			? computer.getName()
+			: player.getName();
 
 	const playRound = (rowPos, colPos) => {
 		if (computer.getBoard().isPosHit(rowPos, colPos)) return;
@@ -33,31 +37,33 @@ const gameController = () => {
 		Object.values(FLEET).forEach((shipLength) => {
 			const newShip = Ship(shipLength);
 
-			while (true) {
-				if (
-					computer
-						.getBoard()
-						.placeShip(
-							newShip,
-							Math.floor(Math.random() * 10),
-							Math.floor(Math.random() * 10),
-							Math.random() < 0.5
-						)
-				)
-					break;
+			let placed = false;
+			while (!placed) {
+				const rowPos = Math.floor(Math.random() * 10);
+				const colPos = Math.floor(Math.random() * 10);
+				const isVertical = Math.random() < 0.5;
+				placed = computer
+					.getBoard()
+					.placeShip(newShip, rowPos, colPos, isVertical);
 			}
 		});
 	};
-	placeShipsRandomly();
 
 	const placeShips = (rowPos, colPos, isVertical) => {
 		if (!playerShips.length) return;
-		// REFACTOR THIS TO OPERATE ON THE END OF ARRAY AND NOT THE BEGGINING
 		const newShip = playerShips.shift();
 
 		if (!player.getBoard().placeShip(newShip, rowPos, colPos, isVertical)) {
 			playerShips.unshift(newShip);
 		}
+	};
+
+	const restartGame = () => {
+		player.getBoard().resetBoard();
+		computer.getBoard().resetBoard();
+
+		playerShips = Object.values(FLEET).map((length) => Ship(length));
+		placeShipsRandomly();
 	};
 
 	const getPlayer = () => player;
@@ -68,6 +74,8 @@ const gameController = () => {
 
 	const arePlayerShipsEmpty = () => playerShips.length === 0;
 
+	placeShipsRandomly();
+
 	return {
 		playRound,
 		getPlayer,
@@ -75,6 +83,9 @@ const gameController = () => {
 		placeShips,
 		getCurrentShip,
 		arePlayerShipsEmpty,
+		checkForWin,
+		getWinnerName,
+		restartGame,
 	};
 };
 
