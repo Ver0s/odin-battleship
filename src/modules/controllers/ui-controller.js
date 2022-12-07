@@ -54,20 +54,15 @@ const UIController = () => {
 	};
 
 	const handleRestartGame = () => {
-		// Hide the player and computer boards
 		uiHelpers.hideElement(playerBoardElement);
 		uiHelpers.hideElement(computerBoardElement);
 
-		// Hide the end game modal
 		uiHelpers.hideEndGameModal();
 
-		// Restart the game
 		game.restartGame();
 
-		// Show the setup board container
 		uiHelpers.hideElement(setupBoardContainerElement, false);
 
-		// Clear the setup, player, and computer boards
 		uiHelpers.clearBoard(setupBoardElement);
 		uiHelpers.clearBoard(playerBoardElement);
 		uiHelpers.clearBoard(computerBoardElement);
