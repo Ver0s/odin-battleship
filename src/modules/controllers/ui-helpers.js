@@ -25,43 +25,29 @@ export const showShips = (board, boardElement) => {
 	});
 };
 
-export const highlightShipHover = (board, cell, shipLength, isVertical) => {
-	const [rowPos, colPos] = getCellCoords(cell);
-
-	if (isVertical) {
-		for (let i = 0; i < shipLength; i++) {
-			getCellElement(board, rowPos + i, colPos).classList.add(
-				'ship-hover'
-			);
-		}
-	} else {
-		for (let i = 0; i < shipLength; i++) {
-			getCellElement(board, rowPos, colPos + i).classList.add(
-				'ship-hover'
-			);
-		}
-	}
-};
-
-export const highlightShipHoverError = (
+export const highlightShipHover = (
 	board,
 	cell,
 	shipLength,
-	isVertical
+	isVertical,
+	isError = false
 ) => {
 	const [rowPos, colPos] = getCellCoords(cell);
+	const className = isError ? 'ship-hover-error' : 'ship-hover';
 
 	if (isVertical) {
 		for (let i = 0; i < shipLength; i++) {
-			getCellElement(board, rowPos + i, colPos)?.classList.add(
-				'ship-hover-error'
-			);
+			const element = getCellElement(board, rowPos + i, colPos);
+			if (element) {
+				element.classList.add(className);
+			}
 		}
 	} else {
 		for (let i = 0; i < shipLength; i++) {
-			getCellElement(board, rowPos, colPos + i)?.classList.add(
-				'ship-hover-error'
-			);
+			const element = getCellElement(board, rowPos, colPos + i);
+			if (element) {
+				element.classList.add(className);
+			}
 		}
 	}
 };
@@ -73,45 +59,52 @@ export const clearShipHover = (board) => {
 	});
 };
 
+export const clearBoard = (board) => {
+	[...board.children].forEach((cell) => {
+		cell.className = 'cell';
+	});
+};
+
 export const updateBoards = (player, computer) => {
 	const playerBoardElement = document.querySelector('.player-board');
 	const computerBoardElement = document.querySelector('.computer-board');
 
-	[...playerBoardElement.children].forEach((cell) => {
-		const [rowPos, colPos] = getCellCoords(cell);
+	const updateBoard = (board, boardElement) => {
+		[...boardElement.children].forEach((cell) => {
+			const [rowPos, colPos] = getCellCoords(cell);
+			const isHit = board.isPosHit(rowPos, colPos);
+			const isShip = board.isPosShip(rowPos, colPos);
 
-		if (
-			player.getBoard().isPosShip(rowPos, colPos) &&
-			player.getBoard().isPosHit(rowPos, colPos)
-		) {
-			cell.classList.add('hit');
-		}
-		if (
-			!player.getBoard().isPosShip(rowPos, colPos) &&
-			player.getBoard().isPosHit(rowPos, colPos)
-		) {
-			cell.classList.add('miss');
-		}
-	});
+			if (isHit && isShip) {
+				cell.classList.add('hit');
+			} else if (isHit && !isShip) {
+				cell.classList.add('miss');
+			}
+		});
+	};
 
-	[...computerBoardElement.children].forEach((cell) => {
-		const [rowPos, colPos] = getCellCoords(cell);
-
-		if (
-			computer.getBoard().isPosShip(rowPos, colPos) &&
-			computer.getBoard().isPosHit(rowPos, colPos)
-		) {
-			cell.classList.add('hit');
-		}
-		if (
-			!computer.getBoard().isPosShip(rowPos, colPos) &&
-			computer.getBoard().isPosHit(rowPos, colPos)
-		) {
-			cell.classList.add('miss');
-		}
-	});
+	updateBoard(player.getBoard(), playerBoardElement);
+	updateBoard(computer.getBoard(), computerBoardElement);
 };
 
-export const hideElement = (el) => {
-	el.style.display = 'none';
+export const showEndGameModal = (winner) => {
+	const endGameModal = document.querySelector('#end-game-modal');
+	const winnerName = document.querySelector('#winner');
+
+	winnerName.textContent =
+		winner === 'You' ? `${winner} win` : `${winner} wins`;
+	endGameModal.showModal();
+};
+
+export const hideEndGameModal = () => {
+	const endGameModal = document.querySelector('#end-game-modal');
+	endGameModal.close();
+};
+
+export const hideElement = (el, hide = true) => {
+	el.style.display = hide ? 'none' : 'block';
+};
+
+export const hideBoard = (el, hide = true) => {
+	el.style.display = hide ? 'none' : 'grid';
 };
